@@ -4,19 +4,15 @@ import 'package:retrofit/retrofit.dart';
 
 part 'api_client.g.dart';
 
-@RestApi(baseUrl: "http://restapi.adequateshop.com/api/")
+@RestApi(baseUrl: 'https://wallpaper71.coder71.com/api/')
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 
-  @POST("authaccount/login")
-  Future<dynamic> login(@Body() Map<String, dynamic> map);
+  @GET("collections")
+  Future<dynamic> getCollectionCategory();
 
-  @POST("authaccount/registration")
-  Future<dynamic> register(@Body() Map<String, dynamic> map);
+  @GET("products/recent")
+  Future<dynamic> getProductRecent();
 
-  @GET("users")
-  Future<dynamic> getAllUser();
 
-  // @POST("users/293788")
-  // Future<dynamic> updateUser(@Body() Map<String, dynamic> map);
 }

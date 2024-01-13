@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:photo_gallery/components/loading_list_page.dart';
+import 'package:photo_gallery/product/bloc/home_bloc.dart';
 import 'package:photo_gallery/screens/home_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:photo_gallery/values/app_colors.dart';
-import 'package:photo_gallery/values/app_theme.dart';
+
 
 import 'category_image.dart';
 import 'favorites_screen.dart';
@@ -16,22 +20,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+
+  final _formKey = GlobalKey<FormState>();
   late final TabController _tabController;
 
   @override
   void initState() {
-    super.initState();
     _tabController = TabController(length: 3, vsync: this);
+     context.read<HomeBloc>().add(MostPopular());
+     context.read<HomeBloc>().add(Category());
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
+      key: _formKey,
       length: 3,
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
-          // backgroundColor: Colors.deepPurpleAccent,
           centerTitle: false,
           toolbarHeight: 50.h,
           iconTheme: IconThemeData(
@@ -43,7 +51,11 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             child: Align(
               alignment: Alignment.centerLeft,
               child: SizedBox(
-                width: MediaQuery.of(context).size.width.r,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width
+                    .r,
                 child: TabBar(
                   //
                   // indicator: UnderlineTabIndicator(
@@ -123,14 +135,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           //  ),
         ),
         //backgroundColor: AppColors.darkestBlue,
-        drawer: Drawer(),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            HomeProduct(),
-            CategoryProduct(),
-            FavoritesScreen(),
-          ],
+        drawer: const Drawer(),
+        body: BlocBuilder<HomeBloc, HomeState>(
+          buildWhen: (previous, current) => current.visible != previous.visible,
+          builder: (context, state) {
+            return state.visible == true ?  const Center(
+              child: LoadingListPage(),
+            ) : TabBarView(
+              controller: _tabController,
+              children: [
+                const HomeProduct(),
+                const CategoryProduct(),
+                const FavoritesScreen(),
+              ],
+            );
+          },
         ),
       ),
     );

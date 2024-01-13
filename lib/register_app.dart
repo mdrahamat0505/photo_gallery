@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:photo_gallery/product/bloc/home_bloc.dart';
 
 import 'routes.dart';
 import 'utils/helpers/nevigation_helper.dart';
@@ -15,21 +15,21 @@ class RegisterApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  ScreenUtilInit(
-        designSize: const Size(360, 640),
-        minTextAdapt: true,
-        splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: AppStrings.loginAndRegister,
-          theme: AppTheme.themeData,
-          initialRoute: AppRoutes.homeScreen,
-          scaffoldMessengerKey: SnackbarHelper.key,
-          navigatorKey: NavigationHelper.key,
-          onGenerateRoute: Routes.generateRoute,
-        );
-      }
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<HomeBloc>(
+          create: (context) => HomeBloc(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: AppStrings.loginAndRegister,
+        theme: AppTheme.themeData,
+        initialRoute: AppRoutes.homeScreen,
+        scaffoldMessengerKey: SnackbarHelper.key,
+        navigatorKey: NavigationHelper.key,
+        onGenerateRoute: Routes.generateRoute,
+      ),
     );
   }
 }

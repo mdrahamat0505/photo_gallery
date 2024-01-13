@@ -10,7 +10,7 @@ class AppColors {
   static const Color darkerBlue = Color(0xff152534);
   static const Color darkestBlue = Color(0xff0C1C2E);
   static Color appbarColor1 = hexToColor('#EEF0F6');
-  static Color appbarColor = hexToColor('#636364');
+  static Color appbarColor = hexToColor('#444342');
 
   static const List<Color> defaultGradient = [
     darkBlue,
