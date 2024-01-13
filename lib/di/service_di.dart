@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 
-
 import '../network/api_client.dart';
 import '../services/local_storage.dart';
 import '../services/local_storage_imple.dart';
@@ -23,5 +22,4 @@ Future<void> popularProductModule() async {
       ),
     ),
   );
-
 }

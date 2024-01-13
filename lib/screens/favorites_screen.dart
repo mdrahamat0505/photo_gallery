@@ -15,9 +15,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       child: Text(
         'FAVORITES SCREEN',
         style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-            fontSize: 28.sp),
+            color: Colors.white, fontWeight: FontWeight.w500, fontSize: 28.sp),
       ),
     );
   }

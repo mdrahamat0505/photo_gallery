@@ -18,6 +18,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(const HomeState()) {
     on<MostPopular>(_onMostPopularToState);
     on<Category>(_onCategoryToState);
+    on<Select>(_onSelectToState);
   }
 
   //Home aage data face
@@ -32,7 +33,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       try {
         if (jsonData != null) {
-          emit(state.copyWith(visible: false));
+          // emit(state.copyWith(visible: false));
           // MostPopularModel userData = MostPopularModel.fromJson(jsonData);
           List<dynamic> data = jsonData['data'];
 
@@ -84,7 +85,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       try {
         if (jsonData != null) {
-          emit(state.copyWith(visible: false));
+          // emit(state.copyWith(visible: false));
 
           var categoryModels = await (jsonData as List)
               .map((e) => CategoryModel.fromJson(e))
@@ -120,5 +121,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       );
     }
+  }
+
+  void _onSelectToState(Select event, Emitter<HomeState> emit) async {
+    emit(
+      state.copyWith(
+        selectIndex: event.index,
+      ),
+    );
   }
 }

@@ -23,6 +23,7 @@ void main() async {
     (_) => runApp(
       DevicePreview(
           enabled: !kReleaseMode,
+          //  isToolbarVisible: false,
           builder: (context) => ScreenUtilInit(
               designSize: const Size(360, 640),
               minTextAdapt: true,

@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:photo_gallery/values/app_colors.dart';
 
-
 import 'category_image.dart';
 import 'favorites_screen.dart';
 
@@ -20,15 +19,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-
   final _formKey = GlobalKey<FormState>();
   late final TabController _tabController;
 
   @override
   void initState() {
+    context.read<HomeBloc>().add(MostPopular());
+    context.read<HomeBloc>().add(Category());
     _tabController = TabController(length: 3, vsync: this);
-     context.read<HomeBloc>().add(MostPopular());
-     context.read<HomeBloc>().add(Category());
     super.initState();
   }
 
@@ -41,71 +39,85 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         backgroundColor: Colors.black,
         appBar: AppBar(
           centerTitle: false,
-          toolbarHeight: 50.h,
+          toolbarHeight: 42.h,
           iconTheme: IconThemeData(
             color: Colors.white,
-            size: 30.r,
+            size: 28.r,
           ),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(kToolbarHeight.h),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: SizedBox(
-                width: MediaQuery
-                    .of(context)
-                    .size
-                    .width
-                    .r,
-                child: TabBar(
-                  //
-                  // indicator: UnderlineTabIndicator(
-                  //   insets: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-                  // ),
+              child: BlocBuilder<HomeBloc, HomeState>(
+                buildWhen: (previous, current) =>
+                    current.selectIndex != previous.selectIndex,
+                builder: (context, state) {
+                  return SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: TabBar(
+                      onTap: (index) {
+                        context.read<HomeBloc>().add(
+                              Select(index: index),
+                            );
+                      },
+                      //
+                      // indicator: UnderlineTabIndicator(
+                      //   insets: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+                      // ),
 
-                  // padding: EdgeInsets.symmetric(horizontal:0),
-                  controller: _tabController,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicatorColor: Colors.white,
-                  labelPadding: EdgeInsets.symmetric(horizontal: 20.0.r),
-                  //labelColor: Colors.black,
-                  isScrollable: true,
-                  indicatorWeight: 3.w,
+                      // padding: EdgeInsets.symmetric(horizontal:0),
+                      controller: _tabController,
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      indicatorColor: Colors.white,
+                      labelPadding: EdgeInsets.symmetric(horizontal: 18.0.r),
+                      //labelColor: Colors.black,
+                      isScrollable: true,
+                      indicatorWeight: 3.w,
+                      unselectedLabelColor: Colors.white,
 
-                  //labelPadding: EdgeInsets.only(left: 0, right: 0),
-                  tabs: [
-                    Tab(
-                      // iconMargin:  EdgeInsets.only(bottom: 10.0.r),
-                      height: 40.h,
-                      child: Text(
-                        'HOME',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15.sp),
-                      ),
+                      //labelPadding: EdgeInsets.only(left: 0, right: 0),
+                      tabs: [
+                        Tab(
+                          // iconMargin:  EdgeInsets.only(bottom: 10.0.r),
+                          height: 38.h,
+                          child: Text(
+                            'HOME',
+                            style: TextStyle(
+                                color: state.selectIndex == 0
+                                    ? Colors.grey
+                                    : Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14.sp),
+                          ),
+                        ),
+                        Tab(
+                          height: 38.h,
+                          child: Text(
+                            'CATEGORY',
+                            style: TextStyle(
+                                color: state.selectIndex == 1
+                                    ? Colors.grey
+                                    : Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14.sp),
+                          ),
+                        ),
+                        Tab(
+                          height: 38.h,
+                          child: Text(
+                            'FAVORITES',
+                            style: TextStyle(
+                                color: state.selectIndex == 2
+                                    ? Colors.grey
+                                    : Colors.white,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14.sp),
+                          ),
+                        ),
+                      ],
                     ),
-                    Tab(
-                      height: 40.h,
-                      child: Text(
-                        'CATEGORY',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15.sp),
-                      ),
-                    ),
-                    Tab(
-                      height: 40.h,
-                      child: Text(
-                        'FAVORITES',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 15.sp),
-                      ),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ),
@@ -114,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
-                fontSize: 24.sp),
+                fontSize: 22.sp),
           ),
           // leading: new IconButton(
           //   icon: new Icon(Icons.accessibility),
@@ -139,16 +151,18 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         body: BlocBuilder<HomeBloc, HomeState>(
           buildWhen: (previous, current) => current.visible != previous.visible,
           builder: (context, state) {
-            return state.visible == true ?  const Center(
-              child: LoadingListPage(),
-            ) : TabBarView(
-              controller: _tabController,
-              children: [
-                const HomeProduct(),
-                const CategoryProduct(),
-                const FavoritesScreen(),
-              ],
-            );
+            return state.visible == true
+                ? const Center(
+                    child: LoadingListPage(),
+                  )
+                : TabBarView(
+                    controller: _tabController,
+                    children: const [
+                      HomeProduct(),
+                      CategoryProduct(),
+                      FavoritesScreen(),
+                    ],
+                  );
           },
         ),
       ),
