@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         backgroundColor: Colors.black,
         appBar: AppBar(
           centerTitle: false,
-          toolbarHeight: 42.h,
+          toolbarHeight: 45.h,
           iconTheme: IconThemeData(
             color: Colors.white,
             size: 28.r,
